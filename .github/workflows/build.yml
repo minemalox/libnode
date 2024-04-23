@@ -1,0 +1,92 @@
+name: Build libnode
+
+on: 
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        arch: [x64]
+        os: [ubuntu-latest, windows-latest]
+
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          submodules: 'recursive'
+
+      - name: Setup alpine
+        uses: jirutka/setup-alpine@v1
+        if: runner.os != 'Windows'
+        with:
+          branch: v3.16
+          packages: >
+            git bash binutils-gold curl gnupg libgcc linux-headers make python3 ccache xz libatomic
+            clang clang-dev clang-libs llvm13-dev lld
+            libc-dev musl musl-dev musl-dbg gcc g++
+
+      - name: Apply patches
+        shell: bash
+        working-directory: ./node
+        run: |
+          git apply --reject --whitespace=fix ../patches/enable_rtti.patch
+          git apply --reject --whitespace=fix ../patches/internal_modules.patch
+          git apply --reject --whitespace=fix ../patches/rename_output.patch
+          git apply --reject --whitespace=fix ../patches/version_suffix.patch
+
+      - name: Build project
+        if: runner.os != 'Windows'
+        working-directory: ./node
+        shell: alpine.sh {0}
+        run: |
+          export CC="clang"
+          export CXX="clang++"
+          export CXXFLAGS="-g -mssse3 -std=c++17"
+          export LDFLAGS="-m64 -lstdc++ -Wl,--build-id -fuse-ld=lld"
+          ./configure --shared
+          make -j4
+
+      - name: Install NASM
+        uses: ilammy/setup-nasm@v1
+        if: runner.os == 'Windows'
+
+      - name: Build
+        if: runner.os == 'Windows'
+        shell: bash
+        working-directory: ./node
+        run: ./vcbuild.bat release x64 dll no-cctest
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: libnode-${{ runner.os }}-${{ matrix.arch }}
+          path: ./node/out/Release
+
+  release:
+    runs-on: ubuntu-latest
+    needs: build
+    permissions: 
+      contents: write
+    steps:
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            ${{ github.workspace }}/libnode-Windows-x64/libnode20.dll
+            ${{ github.workspace }}/libnode-Windows-x64/libnode20.lib
+            ${{ github.workspace }}/libnode-Windows-x64/libnode20.pdb
+            ${{ github.workspace }}/libnode-Linux-x64/libnode20.so
+
+      - name: Delete artifacts
+        uses: geekyeggo/delete-artifact@v5
+        with:
+          name: libnode-*
+
