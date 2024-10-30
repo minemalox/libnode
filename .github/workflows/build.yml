@@ -30,14 +30,14 @@ jobs:
             clang clang-dev clang-libs llvm13-dev lld
             libc-dev musl musl-dev musl-dbg gcc g++
 
-      - name: Apply patches
+      - name: Apply all patches
         shell: bash
         working-directory: ./node
         run: |
-          git apply --reject --whitespace=fix ../patches/enable_rtti.patch
-          git apply --reject --whitespace=fix ../patches/internal_modules.patch
-          git apply --reject --whitespace=fix ../patches/rename_output.patch
-          git apply --reject --whitespace=fix ../patches/version_suffix.patch
+          for f in ../patches/*.patch; do
+            echo "Applying $f..."
+            git apply --reject --whitespace=fix "$f"
+          done
 
       - name: Build project
         if: runner.os != 'Windows'
@@ -46,7 +46,7 @@ jobs:
         run: |
           export CC="clang"
           export CXX="clang++"
-          export CXXFLAGS="-g -mssse3 -std=c++17"
+          export CXXFLAGS="-g -mssse3 -std=c++20"
           export LDFLAGS="-m64 -lstdc++ -Wl,--build-id -fuse-ld=lld"
           ./configure --shared
           make -j4
@@ -59,7 +59,7 @@ jobs:
         if: runner.os == 'Windows'
         shell: bash
         working-directory: ./node
-        run: ./vcbuild.bat release x64 dll no-cctest
+        run: ./vcbuild.bat release x64 dll no-cctest clang-cl
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
@@ -80,10 +80,10 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           files: |
-            ${{ github.workspace }}/libnode-Windows-x64/libnode20.dll
-            ${{ github.workspace }}/libnode-Windows-x64/libnode20.lib
-            ${{ github.workspace }}/libnode-Windows-x64/libnode20.pdb
-            ${{ github.workspace }}/libnode-Linux-x64/libnode20.so
+            ${{ github.workspace }}/libnode-Windows-x64/libnode22.dll
+            ${{ github.workspace }}/libnode-Windows-x64/libnode22.lib
+            ${{ github.workspace }}/libnode-Windows-x64/libnode22.pdb
+            ${{ github.workspace }}/libnode-Linux-x64/libnode22.so
 
       - name: Delete artifacts
         uses: geekyeggo/delete-artifact@v5
