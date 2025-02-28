@@ -55,6 +55,23 @@ jobs:
         uses: ilammy/setup-nasm@v1
         if: runner.os == 'Windows'
 
+      - name: Ensure MSVC Toolset 14.36.32532 is installed
+        if: runner.os == 'Windows'
+        shell: powershell
+        run: |
+          $vsPath = & '"C:\Program Files (x86)\Microsoft Visual Studio\Installer\vswhere.exe"' -latest -property installationPath
+          if (-not $vsPath) {
+            Write-Error "Visual Studio installation not found."
+            exit 1
+          }
+          $msvcDir = Join-Path $vsPath "VC\Tools\MSVC\14.36.32532"
+          if (-Not (Test-Path $msvcDir)) {
+            Write-Host "MSVC toolset 14.36.32532 not found. Attempting installation..."
+            & "C:\Program Files (x86)\Microsoft Visual Studio\Installer\vs_installer.exe" modify --installPath $vsPath --add Microsoft.VisualStudio.Component.VC.14.36.17.6.x86.x64 --quiet --wait
+          } else {
+            Write-Host "MSVC toolset 14.36.32532 is already installed."
+          }
+
       - name: Build
         if: runner.os == 'Windows'
         shell: bash
