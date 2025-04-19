@@ -4,21 +4,21 @@ index de83a56672..1f5c1781bb 100644
 +++ b/common.gypi
 @@ -23,7 +23,7 @@
      'node_shared_openssl%': 'false',
- 
+
      'node_tag%': '',
 -    'uv_library%': 'static_library',
 +    'uv_library%': 'shared_library',
- 
+
      'clang%': 0,
      'error_on_warn%': 'false',
 diff --git a/deps/uv/uv.gyp b/deps/uv/uv.gyp
 index 6c86c3fa50..006596e86a 100644
 --- a/deps/uv/uv.gyp
 +++ b/deps/uv/uv.gyp
-@@ -150,7 +150,21 @@
+@@ -151,7 +151,21 @@
      ],
    },
- 
+
 -  'targets': [
 +  'targets': [  {
 +    'target_name': 'libuv_postbuild',
@@ -38,7 +38,7 @@ index 6c86c3fa50..006596e86a 100644
      {
        'target_name': 'libuv',
        'toolsets': ['host', 'target'],
-@@ -246,7 +260,7 @@
+@@ -247,7 +261,7 @@
                # This will cause gyp to set soname
                # Must correspond with UV_VERSION_MAJOR
                # in include/uv/version.h
@@ -60,13 +60,13 @@ index 11474953b1..a45c909938 100644
      'node_shared_sqlite%': 'false',
      'node_shared_uvwasi%': 'false',
      'node_shared_nghttp2%': 'false',
-@@ -863,6 +863,7 @@
-         'deps/ada/ada.gyp:ada',
+@@ -860,6 +860,7 @@
+         'deps/histogram/histogram.gyp:histogram',
          'deps/nbytes/nbytes.gyp:nbytes',
          'node_js2c#host',
 +        'deps/uv/uv.gyp:libuv_postbuild',
        ],
- 
+
        'sources': [
 diff --git a/node.gypi b/node.gypi
 index 44780fe3b1..10346730bf 100644

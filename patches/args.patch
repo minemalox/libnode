@@ -2,9 +2,9 @@ diff --git forkSrcPrefix/src/node_options.cc forkDstPrefix/src/node_options.cc
 index d3b59690e917afcf725cbfb1232d6ed9f298ee3a..2b055cad524d6c0ab16d950f7b51d640187c784e 100644
 --- forkSrcPrefix/src/node_options.cc
 +++ forkDstPrefix/src/node_options.cc
-@@ -355,6 +355,9 @@ DebugOptionsParser::DebugOptionsParser() {
+@@ -365,6 +365,9 @@ DebugOptionsParser::DebugOptionsParser() {
  }
- 
+
  EnvironmentOptionsParser::EnvironmentOptionsParser() {
 +  AddOption("--start-node", "cfx", &EnvironmentOptions::cfx);
 +  AddOption("--fork-node22", "cfx", &EnvironmentOptions::cfx);
@@ -21,6 +21,6 @@ index fc7f898a6b9b6072c15d77710c20ed1ba580966b..50e21ab6a71bacceec6919669ee002db
    std::vector<std::string> conditions;
    bool detect_module = true;
 +  bool cfx = true;
+   bool disable_sigusr1 = false;
    bool print_required_tla = false;
-   bool require_module = false;
-   std::string dns_result_order;
+   bool require_module = true;

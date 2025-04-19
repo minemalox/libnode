@@ -2,8 +2,8 @@ diff --git forkSrcPrefix/vcbuild.bat forkDstPrefix/vcbuild.bat
 index 428577c5c3d1e9ab55285d7d985fc06ec0ac1dd4..562588ade19d7688a5fd260a38b9ecff10a537bb 100644
 --- forkSrcPrefix/vcbuild.bat
 +++ forkDstPrefix/vcbuild.bat
-@@ -283,11 +283,11 @@ goto exit
- 
+@@ -289,11 +289,11 @@ goto exit
+
  @rem Visual Studio v17.10 has a bug that causes the build to fail.
  @rem Check if the version is v17.10 and exit if it is.
 -echo %VSCMD_VER% | findstr /b /c:"17.10" >nul
@@ -16,6 +16,6 @@ index 428577c5c3d1e9ab55285d7d985fc06ec0ac1dd4..562588ade19d7688a5fd260a38b9ecff
 +@rem   echo Node.js doesn't compile with Visual Studio 17.10 Please use a different version.
 +@rem   goto exit
 +@rem )
- 
+
  @rem check if the clang-cl build is requested
  if not defined clang_cl goto clang-skip

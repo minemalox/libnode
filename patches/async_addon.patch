@@ -2,12 +2,12 @@ diff --git forkSrcPrefix/src/node_api.cc forkDstPrefix/src/node_api.cc
 index a019a1826c6ce72a5f05d0bee01ece2089126b09..4694d3ad271a7a46e28f4c9bf4b8266bb0eca56e 100644
 --- forkSrcPrefix/src/node_api.cc
 +++ forkDstPrefix/src/node_api.cc
-@@ -1201,7 +1201,7 @@ class Work : public node::AsyncResource, public node::ThreadPoolWork {
+@@ -1203,7 +1203,7 @@ class Work : public node::AsyncResource, public node::ThreadPoolWork {
      // Establish a handle scope here so that every callback doesn't have to.
      // Also it is needed for the exception-handling below.
      v8::HandleScope scope(_env->isolate);
 -
 +    v8::Context::Scope context_scope(_env->context());
      CallbackScope callback_scope(this);
- 
+
      _env->CallbackIntoModule<true>([&](napi_env env) {

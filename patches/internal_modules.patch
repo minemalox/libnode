@@ -3,7 +3,7 @@ index c11f70dd6bf3298ac848ab5c1bf225bbc7250201..975bf1b35e3d8e534bface618e2895b7
 --- forkSrcPrefix/lib/internal/bootstrap/realm.js
 +++ forkDstPrefix/lib/internal/bootstrap/realm.js
 @@ -210,12 +210,12 @@ const getOwn = (target, property, receiver) => {
- 
+
  const publicBuiltinIds = builtinIds
    .filter((id) =>
 -    !StringPrototypeStartsWith(id, 'internal/') &&
@@ -14,6 +14,6 @@ index c11f70dd6bf3298ac848ab5c1bf225bbc7250201..975bf1b35e3d8e534bface618e2895b7
  const internalBuiltinIds = builtinIds
 -  .filter((id) => StringPrototypeStartsWith(id, 'internal/') && id !== selfId);
 +  .filter((id) => StringPrototypeStartsWith(id, 'yespls/') && id !== selfId);
- 
+
  // When --expose-internals is on we'll add the internal builtin ids to these.
  let canBeRequiredByUsersList = new SafeSet(publicBuiltinIds);

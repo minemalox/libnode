@@ -2,15 +2,16 @@ diff --git forkSrcPrefix/tools/v8_gypfiles/features.gypi forkDstPrefix/tools/v8_
 index 6e21dac6d70ede1f6dbd6a525fb9f111d6c2eb96..bbe0a0b033f1c48119a5e73874b8d17df9e292a9 100644
 --- forkSrcPrefix/tools/v8_gypfiles/features.gypi
 +++ forkDstPrefix/tools/v8_gypfiles/features.gypi
-@@ -328,7 +328,8 @@
- 
-     # Enable advanced BigInt algorithms, costing about 10-30 KiB binary size
-     # depending on platform.
--    'v8_advanced_bigint_algorithms%': 1
-+    'v8_advanced_bigint_algorithms%': 1,
+@@ -331,7 +331,9 @@
+     'v8_advanced_bigint_algorithms%': 1,
+
+     # Enable 256-bit long vector re-vectorization pass in WASM compilation pipeline.
+-    'v8_enable_wasm_simd256_revec%' : 0
++    'v8_enable_wasm_simd256_revec%' : 0,
++
 +    'use_rtti%': 1
    },
- 
+
    'target_defaults': {
 diff --git forkSrcPrefix/common.gypi forkDstPrefix/common.gypi
 index de83a566724a36fff8b0c4ca9ba7e151a8c39f54..e1ccc53bdc0b83fd225354c1551fda8a66c57099 100644
