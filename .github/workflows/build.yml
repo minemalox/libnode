@@ -59,7 +59,7 @@ jobs:
         if: runner.os == 'Windows'
         shell: powershell
         run: |
-          $vsPath = & '"C:\Program Files (x86)\Microsoft Visual Studio\Installer\vswhere.exe"' -latest -property installationPath
+          $vsPath = & "C:\Program Files (x86)\Microsoft Visual Studio\Installer\vswhere.exe" -latest -property installationPath
           if (-not $vsPath) {
             Write-Error "Visual Studio installation not found."
             exit 1
